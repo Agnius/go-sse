@@ -30,16 +30,16 @@ func TestName(t *testing.T) {
 }
 
 func TestClientsCount(t *testing.T) {
-	const INTERATIONS int = 10
+	const ITERATIONS int = 10
 
 	channel := CreateChannel(CHANNEL_NAME)
 
-	for i := 0; i < INTERATIONS; i++ {
+	for i := 0; i < ITERATIONS; i++ {
 		messageChannel := make(chan *Message)
 		channel.clients[messageChannel] = true
 	}
 
-	if channel.ClientsCount() != INTERATIONS {
-		t.Errorf("Test failed clients count does not match! Expected: %d Got: %d", INTERATIONS, channel.ClientsCount())
+	if channel.ClientsCount() != ITERATIONS {
+		t.Errorf("Test failed clients count does not match! Expected: %d Got: %d", ITERATIONS, channel.ClientsCount())
 	}
 }
