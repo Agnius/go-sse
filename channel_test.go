@@ -22,7 +22,7 @@ func TestCreateChannel(t *testing.T) {
 }
 
 func TestName(t *testing.T) {
-	channel := CreateChannel("CHANNEL_NAME")
+	channel := CreateChannel(CHANNEL_NAME)
 
 	if channel.Name() != CHANNEL_NAME {
 		t.Errorf("Test failed name property is not equel to %s", CHANNEL_NAME)
