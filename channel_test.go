@@ -17,7 +17,7 @@ func TestCreateChannel(t *testing.T) {
 	channel := CreateChannel(CHANNEL_NAME)
 
 	if !reflect.DeepEqual(fakeChannel, channel) {
-		t.Error("Failed to create channel")
+		t.Error("Channel properties is not euqal to fakeChannel")
 	}
 }
 
@@ -25,7 +25,7 @@ func TestName(t *testing.T) {
 	channel := CreateChannel(CHANNEL_NAME)
 
 	if channel.Name() != CHANNEL_NAME {
-		t.Errorf("Test failed name property is not equel to %s", CHANNEL_NAME)
+		t.Errorf("Name property is not equal to %s", CHANNEL_NAME)
 	}
 }
 
