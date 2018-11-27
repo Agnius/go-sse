@@ -16,6 +16,7 @@ func (c *Client) Channel() string {
 	return c.channel
 }
 
-func (c *Client) Close() {
+func (c *Client) Close(clients map[chan *Message]bool) {
+	delete(clients, c.messageChannel)
 	close(c.messageChannel)
 }

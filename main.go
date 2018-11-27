@@ -109,15 +109,15 @@ func (sse *SSE) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 				fmt.Fprintf(rw, "event: %s\n\n", "timeout")
 				fmt.Fprintf(rw, "data: %ds\n\n", TIMEOUT)
 				flusher.Flush()
-				defer req.Body.Close()
+
+				client.Close(sse.channels[client.channel].clients)
+				return
 			case c := <-sse.closingClient:
-				close(c.messageChannel)
-				delete(sse.channels[c.channel].clients, c.messageChannel)
+				client.Close(sse.channels[c.Channel()].clients)
 
 				if DEBUG {
-					fmt.Printf("Removed client from %s channel. Clients left: %d", c.channel, len(sse.channels[c.channel].clients))
+					fmt.Printf("Removed client from %s channel. Clients left: %d", c.Channel(), sse.channels[c.Channel()].ClientsCount())
 				}
-
 				return
 			}
 		}
