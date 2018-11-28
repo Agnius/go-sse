@@ -68,6 +68,8 @@ func (sse *SSE) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 			topic:   topic,
 			message: string(b),
 		})
+
+		rw.WriteHeader(204)
 	} else if req.Method == "GET" {
 		// Since we can listen non existing channel, we have to create new one
 		channel := sse.createChannelIfNotExist(topic)
