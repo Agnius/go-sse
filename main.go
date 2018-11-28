@@ -102,11 +102,12 @@ func (sse *SSE) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 					return
 				}
 
-				fmt.Fprintf(rw, "event: %s\n\n", msg.event)
+				fmt.Fprintf(rw, "id: %d\n", msg.id)
+				fmt.Fprintf(rw, "event: %s\n", msg.event)
 				fmt.Fprintf(rw, "data: %s\n\n", string(msg.data))
 				flusher.Flush()
 			case <-time.C:
-				fmt.Fprintf(rw, "event: %s\n\n", "timeout")
+				fmt.Fprintf(rw, "event: %s\n", "timeout")
 				fmt.Fprintf(rw, "data: %ds\n\n", TIMEOUT)
 				flusher.Flush()
 
