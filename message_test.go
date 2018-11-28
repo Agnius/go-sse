@@ -6,9 +6,9 @@ import (
 )
 
 const (
-	TEST_EVENT  = "erwferg5b1vsd315"
-	TEST_DATA   = "X12ds34fv46we4rfg68ewg4"
-	TEST_CANNEL = "897878refv1"
+	TEST_EVENT   = "erwferg5b1vsd315"
+	TEST_DATA    = "X12ds34fv46we4rfg68ewg4"
+	TEST_CHANNEL = "897878refv1"
 )
 
 func TestNewMessage(t *testing.T) {
@@ -17,10 +17,10 @@ func TestNewMessage(t *testing.T) {
 		id:      1,
 		event:   TEST_EVENT,
 		data:    TEST_DATA,
-		channel: TEST_CANNEL,
+		channel: TEST_CHANNEL,
 	}
 
-	message := NewMessage(TEST_EVENT, TEST_DATA, TEST_CANNEL)
+	message := NewMessage(TEST_EVENT, TEST_DATA, TEST_CHANNEL)
 
 	if !reflect.DeepEqual(message, fakeMessage) {
 		t.Error("Message properties is not euqal to fakeMessage")
@@ -31,7 +31,7 @@ func TestMessagesCount(t *testing.T) {
 	const ITERATIONS = 10
 
 	for i := 0; i != ITERATIONS; i++ {
-		NewMessage(TEST_EVENT, TEST_DATA, TEST_CANNEL)
+		NewMessage(TEST_EVENT, TEST_DATA, TEST_CHANNEL)
 	}
 
 	if MessagesCount() != ITERATIONS {
