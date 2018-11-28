@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -106,7 +107,7 @@ func (sse *SSE) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 
 				fmt.Fprintf(rw, "id: %d\n", msg.id)
 				fmt.Fprintf(rw, "event: %s\n", msg.event)
-				fmt.Fprintf(rw, "data: %s\n\n", string(msg.data))
+				fmt.Fprintf(rw, "data: %s\n\n", strings.Replace(string(msg.data), "\n", "\ndata: ", -1))
 				flusher.Flush()
 			case <-time.C:
 				fmt.Fprintf(rw, "event: %s\n", "timeout")
