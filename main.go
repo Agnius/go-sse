@@ -116,13 +116,6 @@ func (sse *SSE) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 
 				client.Close(sse.channels[client.channel].clients)
 				return
-			case c := <-sse.closingClient:
-				client.Close(sse.channels[c.Channel()].clients)
-
-				if DEBUG {
-					fmt.Printf("Removed client from %s channel. Clients left: %d", c.Channel(), sse.channels[c.Channel()].ClientsCount())
-				}
-				return
 			}
 		}
 	}
@@ -148,6 +141,13 @@ func (sse *SSE) dispatch() {
 		case s := <-sse.incomingClient:
 			message := NewMessage("msg", s.message, s.topic)
 			go addMessage(sse.channels[s.topic], message)
+		case c := <-sse.closingClient:
+			c.Close(sse.channels[c.Channel()].clients)
+
+			if DEBUG {
+				fmt.Printf("Removed client from %s channel. Clients left: %d", c.Channel(), sse.channels[c.Channel()].ClientsCount())
+			}
+			return
 		}
 	}
 }
