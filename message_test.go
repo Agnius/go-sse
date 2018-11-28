@@ -29,6 +29,9 @@ func TestNewMessage(t *testing.T) {
 
 func TestMessagesCount(t *testing.T) {
 	const ITERATIONS = 10
+	// Because of before executed test messagesCount now is 1
+	// We should reset it for new test
+	messagesCount = 0
 
 	for range [ITERATIONS]int{} {
 		NewMessage(TEST_EVENT, TEST_DATA, TEST_CHANNEL)
