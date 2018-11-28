@@ -34,7 +34,7 @@ func TestClientsCount(t *testing.T) {
 
 	channel := CreateChannel(CHANNEL_NAME)
 
-	for i := 0; i < ITERATIONS; i++ {
+	for range [ITERATIONS]int{} {
 		messageChannel := make(chan *Message)
 		channel.clients[messageChannel] = true
 	}

@@ -30,7 +30,7 @@ func TestNewMessage(t *testing.T) {
 func TestMessagesCount(t *testing.T) {
 	const ITERATIONS = 10
 
-	for i := 0; i != ITERATIONS; i++ {
+	for range [ITERATIONS]int{} {
 		NewMessage(TEST_EVENT, TEST_DATA, TEST_CHANNEL)
 	}
 
