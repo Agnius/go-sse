@@ -87,12 +87,7 @@ func (sse *SSE) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		rw.Header().Set("Cache-Control", "no-cache")
 		rw.Header().Set("Access-Control-Allow-Origin", "*")
 
-		notify := rw.(http.CloseNotifier).CloseNotify()
-
-		go func() {
-			<-notify
-			sse.closingClient <- client
-		}()
+		close := rw.(http.CloseNotifier).CloseNotify()
 
 		// After we started SSE connection between server and client
 		// We have to set timeout for client
@@ -100,6 +95,15 @@ func (sse *SSE) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 
 		for {
 			select {
+			case <-time.C:
+				fmt.Fprintf(rw, "event: %s\n", "timeout")
+				fmt.Fprintf(rw, "data: %ds\n\n", TIMEOUT)
+				flusher.Flush()
+				sse.closingClient <- client
+				return
+			case <-close:
+				sse.closingClient <- client
+				return
 			case msg := <-clientChan:
 				if msg == nil {
 					return
@@ -109,13 +113,6 @@ func (sse *SSE) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 				fmt.Fprintf(rw, "event: %s\n", msg.event)
 				fmt.Fprintf(rw, "data: %s\n\n", strings.Replace(string(msg.data), "\n", "\ndata: ", -1))
 				flusher.Flush()
-			case <-time.C:
-				fmt.Fprintf(rw, "event: %s\n", "timeout")
-				fmt.Fprintf(rw, "data: %ds\n\n", TIMEOUT)
-				flusher.Flush()
-
-				client.Close(sse.channels[client.channel].clients)
-				return
 			}
 		}
 	}
@@ -143,11 +140,9 @@ func (sse *SSE) dispatch() {
 			go addMessage(sse.channels[s.topic], message)
 		case c := <-sse.closingClient:
 			c.Close(sse.channels[c.Channel()].clients)
-
 			if DEBUG {
-				fmt.Printf("Removed client from %s channel. Clients left: %d", c.Channel(), sse.channels[c.Channel()].ClientsCount())
+				fmt.Printf("Removed client from %s channel. Clients left: %d\n\n", c.Channel(), sse.channels[c.Channel()].ClientsCount())
 			}
-			return
 		}
 	}
 }
